@@ -1,0 +1,18 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+.env
+.env.local
+
+# 用户上传的 PDF（保留目录结构）
+data/uploads/*
+!data/uploads/.gitkeep
+
