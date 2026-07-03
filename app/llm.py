@@ -2,6 +2,7 @@ from functools import lru_cache
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
+from pydantic import SecretStr
 
 from app.config import get_settings
 
@@ -11,7 +12,7 @@ def get_llm() -> ChatOpenAI:
     settings = get_settings()
     return ChatOpenAI(
         model=settings["model"],
-        api_key=settings["api_key"],
+        api_key=SecretStr(settings["api_key"]),
         base_url=settings["base_url"],
         temperature=0.7,
     )

@@ -1,6 +1,9 @@
-﻿{
+{
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
   "python.terminal.activateEnvironment": true,
+  "basedpyright.analysis.venvPath": ".",
+  "basedpyright.analysis.venv": ".venv",
+  "python.analysis.diagnosticMode": "workspace",
   "terminal.integrated.env.windows": {
     "Path": "${env:USERPROFILE}\\.local\\bin;${env:Path}"
   }

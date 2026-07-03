@@ -7,14 +7,14 @@
 - [x] **M0** 环境：uv + Python 3.12 + FastAPI `/health`
 - [x] **M1** 首个 LLM：DeepSeek + `/chat` + [qa-m1.md](./qa-m1.md)
 - [ ] **M2** 基础 RAG：PDF 上传 → 切块 → 检索 → 问答 ← **进行中**
-  - [x] **M2.1** PDF 上传 + 切块 → [M2-steps.md](./M2-steps.md)
-  - [ ] **M2.2** Embedding + Chroma
-  - [ ] **M2.3** 检索 + RAG 问答
+  - [x] **M2.1** PDF 上传 + 切块
+  - [x] **M2.2** Embedding + Chroma
+  - [x] **M2.3** 检索 + RAG 问答 → [qa-m2.md](./qa-m2.md)
 - [ ] **M3** 全栈：React 前端 + SSE 流式
 - [ ] **M4** 进阶：LangGraph 或混合检索
 - [ ] **M5** 简历交付：Docker + README + 面试 20 题
 
-**有空时说**：「继续 M2.2」（当前 M2.1 待验收）
+**有空时说**：「继续 M3」（当前 M2.3 待验收）
 
 ---
 
@@ -248,7 +248,7 @@ flowchart LR
 |--------|------|---------|---------|
 | **M0 环境** | uv + Python 3.12 + FastAPI `/health` | 已完成 | 已完成 |
 | **M1 首个 LLM** | DeepSeek 接入 + `/chat` + 问答卡 5 题 | 1 次 session | **已完成** |
-| **M2 基础 RAG** | PDF 上传 → 切块 → 检索 → 问答 | 2～3 次 session | M2.1 完成，待验收 |
+| **M2 基础 RAG** | PDF 上传 → 切块 → 检索 → 问答 | 2～3 次 session | M2.3 完成，待验收 |
 | **M3 全栈** | React 前端 + SSE 流式 | 2 次 session | 未开始 |
 | **M4 进阶** | LangGraph 评分 或 混合检索（二选一） | 1～2 次 session | 未开始 |
 | **M5 简历交付** | Docker + README + 20 道面试题 | 1～2 次 session | 未开始 |
@@ -332,7 +332,7 @@ flowchart LR
 
 **M1 已完成**：DeepSeek `/chat` 可用，见 [qa-m1.md](./qa-m1.md)。
 
-**下次有空（M2）**：先验收 M2.1（`/documents/upload`），再说「继续 M2.2」→ Embedding + Chroma。
+**下次有空（M2）**：验收 M2.3（`/chat` + `use_rag: true`），见 [qa-m2.md](./qa-m2.md)。
 
 **忙公司项目时**：复习 qa-m1，偶尔跑通 `/health` 和 `/chat` 即可。
 

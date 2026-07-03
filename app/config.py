@@ -1,9 +1,23 @@
 import os
 from functools import lru_cache
+from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_ENV_FILE = _PROJECT_ROOT / ".env"
+
+load_dotenv(_ENV_FILE, encoding="utf-8-sig")
+
+# 国内默认走 HuggingFace 镜像（可在 .env 里覆盖 HF_ENDPOINT）
+_hf_endpoint = os.getenv("HF_ENDPOINT", "").strip()
+if not _hf_endpoint:
+    os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
+
+
+@lru_cache
+def get_embedding_model() -> str:
+    return os.getenv("EMBEDDING_MODEL", "BAAI/bge-small-zh-v1.5").strip()
 
 
 @lru_cache
@@ -19,4 +33,5 @@ def get_settings() -> dict[str, str]:
         "api_key": api_key,
         "base_url": base_url,
         "model": model,
+        "embedding_model": get_embedding_model(),
     }
