@@ -6,15 +6,61 @@
 
 - [x] **M0** 环境：uv + Python 3.12 + FastAPI `/health`
 - [x] **M1** 首个 LLM：DeepSeek + `/chat` + [qa-m1.md](./qa-m1.md)
-- [ ] **M2** 基础 RAG：PDF 上传 → 切块 → 检索 → 问答 ← **进行中**
-  - [x] **M2.1** PDF 上传 + 切块
-  - [x] **M2.2** Embedding + Chroma
-  - [x] **M2.3** 检索 + RAG 问答 → [qa-m2.md](./qa-m2.md)
-- [ ] **M3** 全栈：React 前端 + SSE 流式
+- [x] **M2** 基础 RAG：PDF 上传 → 切块 → 检索 → 问答 → [qa-m2.md](./qa-m2.md)
+- [ ] **M3** 全栈：React 前端 + SSE 流式 ← **下一步（PR 流程）**
 - [ ] **M4** 进阶：LangGraph 或混合检索
 - [ ] **M5** 简历交付：Docker + README + 面试 20 题
 
-**有空时说**：「继续 M3」（当前 M2.3 待验收）
+**有空时说**：「继续 M3」
+
+## 协作方式：PR 流程（从 M3 起）
+
+> 目标：提前熟悉公司里的 Git 协作，每个里程碑走 **分支 → PR → Review → Merge**。
+
+### 标准流程（每个 milestone 重复）
+
+```mermaid
+flowchart LR
+  A[master 稳定] --> B["git checkout -b feature/m3-react"]
+  B --> C[协作写代码 + 本地验收]
+  C --> D[commit + push 分支]
+  D --> E[gh pr create 开 PR]
+  E --> F[你看 diff + 我讲解]
+  F --> G[gh pr merge 合并进 master]
+```
+
+### 你以后要做的（我带你走）
+
+| 步骤 | 命令 / 操作 | 练到什么 |
+|------|-------------|----------|
+| 1. 开分支 | `git checkout -b feature/m3-react` | 功能与主分支隔离 |
+| 2. 开发验收 | 本地跑通 + 我按标准格式讲解 | 代码 + 原理 |
+| 3. 提交推送 | `git add` → `git commit` → `git push -u origin feature/m3-react` | 小步提交 |
+| 4. 开 PR | `gh pr create --title "M3: React 前端" --body "..."` | 合并申请 |
+| 5. Review | 在 GitHub 看 Files changed，口头答 3 道面试题 | Code Review 意识 |
+| 6. 合并 | `gh pr merge --merge` 或网页点 Merge | 合进 master |
+
+### PR 描述模板（每次我会帮你写）
+
+```markdown
+## Summary
+- 本 milestone 做了什么（1～3 条）
+
+## Test plan
+- [ ] 本地启动通过
+- [ ] 关键接口/页面验收通过
+- [ ] 能口述数据流
+```
+
+### 和之前的区别
+
+| 之前（M0～M2） | 以后（M3 起） |
+|----------------|---------------|
+| 直接 push 到 `master` | 先 push 到 `feature/*` 分支 |
+| 无 Review 环节 | 开 PR，合并前看 diff + 问答 |
+| 适合快速搭骨架 | 适合熟悉实习/工作流 |
+
+仓库：https://github.com/bigcabbag/rag-agent
 
 ---
 
