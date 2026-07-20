@@ -1,0 +1,88 @@
+---
+description: 本项目的协作学习模式——分步推进、讲清代码、同步计划、PR 流程
+alwaysApply: true
+---
+
+# 协作学习规则（rag-agent 项目）
+
+## 用户目标
+
+在 AI 协作下完成「企业知识库 RAG」简历项目，**代码能跑 + 面试能讲**。用户有 TS/前端基础，Python/RAG 在学习中。
+
+## 每次协作必须遵守
+
+### 1. 分步推进，一次只做一小步
+
+- 大里程碑（M0～M5）拆成子步，写入 `docs/Mx-steps.md`（如 M3.0、M3.1…）
+- **不要一次做完整个 milestone**；完成当前子步 → 验收 → 再进下一步
+- 用户说「继续 Mx.y」时才做对应子步
+
+### 2. 做完必须讲清楚（用户明确要求）
+
+每次交付代码后，用简体中文说明：
+
+1. **哪些文件、哪段代码干了什么**（按文件/模块分，可附行号引用）
+2. **整个请求/数据流怎么走**（用 mermaid 或分步列表）
+3. **本步验收怎么做**（具体命令 + 期望结果）
+4. **场景面试题 + 参考答案**（2～4 道，**必须是面经风格场景题**，不是纯概念题）
+   - 格式：现象 → 根因 → 排查步骤 → 更好方案 →（可选）本项目关联
+   - 规范见 `docs/qa-scenario-guide.md`
+   - 同步写入 `docs/qa-mx.md` 的 **「场景题」** 章节
+   - 概念题可保留作复习，但**默认出场景题**
+
+不要只改代码不解释；不要只出题不给答案；不要出「CORS 是什么」这类纯定义题（除非用户说「考概念」）。
+
+### 3. 计划与文档同步
+
+- 权威进度：`docs/PLAN.md` 顶部「当前进度」清单
+- 子步详情：`docs/Mx-steps.md`；完成后更新当前进度行
+- 面试卡：`docs/qa-m*.md`；新 milestone 完成时创建或更新
+- 不要只更新 Cursor 内部 plan 而忘记工作区文件
+
+### 4. Git 协作（M3 起）
+
+- 在 `feature/mx-*` 分支开发，不直接改 master
+- **只有用户明确说「提交/commit」时才 commit**；否则只改代码或暂存
+- 用户问「是不是误触」时：先 `git diff` 判断，误触则 restore，正常则 stage
+- Mx 最后子步（如 M3.5）才 push + 开 PR + merge
+
+### 5. 代码风格
+
+- 最小改动：只写当前子步需要的代码
+- 匹配现有目录：`app/` 后端、`frontend/src/api/` 封装请求、`frontend/src/components/` 组件
+- 前端 API 地址统一走 `frontend/src/config.ts` 的 `API_BASE_URL`
+- 开发期 CORS 已在 `main.py` 配置，前端直连 `8000`
+
+### 6. 复习与验收节奏
+
+| 用户时间 | 做什么 |
+|----------|--------|
+| 1～2 小时 | 完成一个 Mx.y + 讲解 + 验收 + 面试题 |
+| 30 分钟 | 复习问答卡或跑通已有功能 |
+| 「考我场景题 Mx」 | 按 qa-scenario-guide 出场景题，追问 trade-off |
+| 「模拟腾讯 RAG 面」 | 从 qa-scenario-guide 模板库抽题 |
+
+### 7. 触发语对照
+
+| 用户说 | Agent 做 |
+|--------|----------|
+| 「继续 M3.1」 | 只做 M3-steps 里 M3.1 的范围 |
+| 「复习 / 到哪一步了」 | 读 PLAN + 代码，总结进度与知识 |
+| 「提交 Mx.y」 | 按规范 commit（不 push 除非用户要求） |
+| 「帮我开分支」 | checkout -b feature/mx-* 并说明命令 |
+
+## 项目结构速记
+
+```
+main.py              # FastAPI 路由 + CORS
+app/                 # 后端业务（llm、rag、schemas）
+frontend/src/
+  config.ts          # API 基址
+  api/               # 请求封装（health、chat…）
+  components/        # UI 组件
+docs/PLAN.md         # 总进度
+docs/SCENARIO.md     # 真实业务场景 + GitHub 对标
+docs/Mx-steps.md     # 子步指南
+docs/qa-mx.md        # 概念题（复习）
+docs/qa-scenario-guide.md  # 场景题规范 + 面经模板
+```

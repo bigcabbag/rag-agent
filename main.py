@@ -1,11 +1,13 @@
 ﻿from pathlib import Path
+import json
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
-from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse, StreamingResponse
 
 from app.config import get_embedding_model, get_settings
-from app.llm import chat
-from app.rag.rag import rag_chat
+from app.llm import chat, chat_stream
+from app.rag.rag import prepare_rag_stream, rag_chat
 from app.rag.loader import (
     DEFAULT_CHUNK_OVERLAP,
     DEFAULT_CHUNK_SIZE,
@@ -25,7 +27,24 @@ UPLOAD_DIR = Path("data/uploads")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 PREVIEW_CHARS = 200
 
+
+def _sse_event(payload: dict) -> str:
+    """SSE 单行事件：data: {...}\\n\\n"""
+    return f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
+
+
 app = FastAPI(title="RAG Agent", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -142,6 +161,58 @@ async def chat_endpoint(body: ChatRequest):
             status_code=502,
             detail=f"调用 DeepSeek 失败: {exc}",
         ) from exc
+
+
+@app.post("/chat/stream")
+async def chat_stream_endpoint(body: ChatRequest):
+    """M3.3：SSE 流式对话。事件：{"token":"..."} 逐条推送，最后 {"done":true,"model":"...","sources":[...]}。"""
+
+    async def event_generator():
+        try:
+            settings = get_settings()
+            model = settings["model"]
+            sources: list[dict] | None = None
+            stream_prompt: str | None = body.system_prompt
+
+            if body.use_rag:
+                rag_prompt, raw_sources, early_reply = prepare_rag_stream(
+                    body.message,
+                    top_k=body.top_k,
+                    system_prompt=body.system_prompt,
+                )
+                if early_reply is not None:
+                    yield _sse_event({"token": early_reply})
+                    yield _sse_event(
+                        {"done": True, "model": model, "sources": []},
+                    )
+                    return
+                stream_prompt = rag_prompt
+                sources = raw_sources
+
+            async for token in chat_stream(body.message, system_prompt=stream_prompt):
+                yield _sse_event({"token": token})
+
+            yield _sse_event(
+                {
+                    "done": True,
+                    "model": model,
+                    "sources": sources,
+                }
+            )
+        except RuntimeError as exc:
+            yield _sse_event({"error": str(exc)})
+        except Exception as exc:
+            yield _sse_event({"error": f"调用 DeepSeek 失败: {exc}"})
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @app.post("/documents/upload", response_model=UploadResponse)
