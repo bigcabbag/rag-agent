@@ -7,11 +7,25 @@
 - [x] **M0** 环境：uv + Python 3.12 + FastAPI `/health`
 - [x] **M1** 首个 LLM：DeepSeek + `/chat` + [qa-m1.md](./qa-m1.md)
 - [x] **M2** 基础 RAG：PDF 上传 → 切块 → 检索 → 问答 → [qa-m2.md](./qa-m2.md)
-- [ ] **M3** 全栈：React 前端 + SSE 流式 ← **下一步（PR 流程）**
-- [ ] **M4** 进阶：LangGraph 或混合检索
-- [ ] **M5** 简历交付：Docker + README + 面试 20 题
+- [ ] **M3** 全栈：React 前端 + SSE 流式 ← **下一步（PR 流程）** → [M3-steps.md](./M3-steps.md) · [qa-m3.md](./qa-m3.md)
+  - [x] M3.0 开分支 + Vite/React 脚手架 + CORS
+  - [x] M3.1 聊天页（非流式 `POST /chat`）
+  - [x] M3.2 上传 PDF + 向量库统计 UI
+  - [x] M3.3 后端 `POST /chat/stream` SSE
+  - [x] M3.4 前端流式 + 打字机效果
+  - [ ] M3.5 联调 polish + 问答卡 + PR 合并 ← **当前：代码完成，待 PR**
+- [ ] **M4** 真实化 + 亮点 → [SCENARIO.md](./SCENARIO.md) · [M4-steps.md](./M4-steps.md)
+  - [ ] M4.0 Markdown 入库 + DevKit 场景 README
+  - [ ] M4.1 评估集 20 题 + Recall@3
+  - [ ] M4.2 LangGraph CRAG（对标 agentic-rag-for-dummies）
+  - [ ] M4.3 BM25+向量 RRF（对标 CliffsCai）
+  - [ ] M4.4 trace_id 检索日志
+- [ ] **M5** 简历交付：Docker + 场景面试 20 题 → [qa-scenario-guide.md](./qa-scenario-guide.md)
 
-**有空时说**：「继续 M3」
+**项目场景**：DevKit 研发团队文档助手（详见 [SCENARIO.md](./SCENARIO.md)）  
+**面试题规则**：每步出**场景题**（面经驱动），见 [qa-scenario-guide.md](./qa-scenario-guide.md)
+
+**有空时说**：「继续 M3.1」（按 [M3-steps.md](./M3-steps.md) 一步一步来）
 
 ## 协作方式：PR 流程（从 M3 起）
 

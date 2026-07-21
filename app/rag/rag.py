@@ -44,3 +44,21 @@ async def rag_chat(
 
     reply = await chat(message, system_prompt=rag_prompt)
     return reply, sources
+
+
+def prepare_rag_stream(
+    message: str,
+    *,
+    top_k: int = 3,
+    system_prompt: str | None = None,
+) -> tuple[str | None, list[dict], str | None]:
+    """RAG 流式：先检索，返回 (拼好的 system_prompt, sources, 无文档时的整段回复)。"""
+    docs = retrieve(message, top_k=top_k)
+    if not docs:
+        return None, [], "知识库中暂无相关文档，请先上传 PDF。"
+
+    context, sources = _build_context(docs)
+    rag_prompt = RAG_SYSTEM_PROMPT.format(context=context)
+    if system_prompt:
+        rag_prompt = f"{system_prompt}\n\n{rag_prompt}"
+    return rag_prompt, sources, None

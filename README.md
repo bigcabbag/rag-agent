@@ -1,39 +1,71 @@
 ﻿# rag-agent
 
-企业知识库 RAG 学习项目（Python 3.12 + uv + FastAPI）。
+DevKit 研发团队文档助手 — 企业知识库 RAG 学习项目（Python 3.12 + uv + FastAPI + React）。
 
 ## 环境要求
 
-- uv（已安装到 `%USERPROFILE%\.local\bin`）
-- Python 3.12（由 uv 管理，见 `.python-version`）
+- uv（`%USERPROFILE%\.local\bin`）
+- Python 3.12（`.python-version`）
+- Node.js 18+（M3 前端）
 
-## 快速开始
+## 快速开始（全栈）
+
+**1. 配置 API Key**
 
 ```powershell
-# 若终端找不到 uv，先执行：
-$env:Path = "$env:USERPROFILE\.local\bin;$env:Path"
+copy .env.example .env
+# 编辑 .env，填入 DEEPSEEK_API_KEY
+```
 
-cd E:\langChain
+**2. 启动后端（终端 1）**
+
+```powershell
+cd E:\01_Dev\langChain
+.\scripts\dev.ps1
+```
+
+**3. 启动前端（终端 2）**
+
+```powershell
+cd E:\01_Dev\langChain
+.\scripts\dev-frontend.ps1
+```
+
+**4. 浏览器验收**
+
+打开 http://127.0.0.1:5173
+
+1. 左侧上传 PDF → 看到 `vector_count > 0`
+2. 右侧提问（默认流式）→ 逐字生成 + 引用来源
+3. 可关「流式输出」对比非流式 `POST /chat`
+
+后端健康检查：http://127.0.0.1:8000/health  
+API 文档：http://127.0.0.1:8000/docs
+
+## 仅后端（M0～M2）
+
+```powershell
 uv sync
 uv run python main.py
 ```
 
-浏览器打开 http://127.0.0.1:8000/health 应返回 `{"status":"ok",...}`
+## 前端环境变量
 
-**对话接口** `POST /chat`：
+见 `frontend/.env.example`（默认 `VITE_API_BASE_URL=http://127.0.0.1:8000`）。
 
-```json
-{ "message": "你好", "system_prompt": "可选，设定 AI 角色" }
-```
+## 主要接口
 
-API 文档：http://127.0.0.1:8000/docs
+| 接口 | 说明 |
+|------|------|
+| `POST /documents/upload` | 上传 PDF 入库 |
+| `GET /documents/stats` | 向量库统计 |
+| `POST /chat` | 非流式对话（JSON 一次返回） |
+| `POST /chat/stream` | SSE 流式对话（M3.3+） |
 
-## API Key（稍后配置）
+## 学习进度
 
-1. `copy .env.example .env`
-2. 填入 DeepSeek 或通义 API Key
-3. 下一节协作 session 接入 LangChain
+见 [docs/PLAN.md](./docs/PLAN.md) · 子步 [docs/M3-steps.md](./docs/M3-steps.md) · 面试题 [docs/qa-m3.md](./docs/qa-m3.md)
 
 ## Cursor / VS Code
 
-打开本文件夹后，选择解释器：`.venv\Scripts\python.exe`（`.vscode/settings.json` 已配置）
+解释器：`.venv\Scripts\python.exe`（`.vscode/settings.json` 已配置）
