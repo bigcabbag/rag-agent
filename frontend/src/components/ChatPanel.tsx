@@ -13,9 +13,9 @@ export type ChatMessage = {
 };
 
 const EXAMPLE_QUESTIONS = [
+  "M3 分几步？每步做什么？",
+  "开发期 CORS 怎么验收？",
   "M2 的 RAG 数据流怎么走？",
-  "POST /chat 的 use_rag 是什么意思？",
-  "骆健渤做过什么项目？",
 ];
 
 type ChatPanelProps = {
@@ -184,8 +184,7 @@ function ChatPanel({ disabled = false }: ChatPanelProps) {
       <div className="chat-panel__messages" aria-live="polite">
         {messages.length === 0 && (
           <p className="chat-panel__empty">
-            输入问题开始对话。开启 use_rag 时会检索已上传文档；若向量库为空，请先上传 PDF（M3.2）。
-            默认流式输出，可关掉对比非流式。
+            输入问题开始对话。先运行 <code>uv run python scripts/import_docs.py</code> 导入本项目 docs，或左侧上传 PDF/Markdown。
           </p>
         )}
         {messages.map((msg) => (
